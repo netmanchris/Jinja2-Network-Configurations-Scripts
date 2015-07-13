@@ -1,0 +1,23 @@
+dhcp relay: {id: '0', ip: 10.10.10.212}
+domain: {name: domain_name}
+ntpServer:
+- {server: 10.101.0.1}
+- {server: 10.101.0.2}
+radius: {acct server: 10.101.0.220, auth server: 10.101.0.220, name: IMC_UAM, secret: testsecret}
+snmp:
+    read: public
+    syscontact: admin.lab.local
+    syslocation: lab
+    trap:
+    - {target: 10.101.0.200}
+    - {target: 10.101.0.201}
+    - {target: 10.101.0.202}
+    write: private
+syslog:
+- {loghost: 10.101.0.200}
+- {loghost: 10.101.0.201}
+- {loghost: 10.101.0.202}
+vlans:
+- {description: management vlan, id: '10', name: management}
+- {description: users vlan, id: '15', name: users}
+- {description: phones vlan, name: phones}
