@@ -4,6 +4,7 @@ ntpServer:
 - {server: 10.101.0.1}
 - {server: 10.101.0.2}
 radius: {acct server: 10.101.0.220, auth server: 10.101.0.220, name: IMC_UAM, secret: testsecret}
+motd: #Welcome to HP internal test network. \n\nThis is a secure lab network, do not connect to any production systems. \n\nUnauthorized access is prohibited.\n\n#
 snmp:
     read: public
     syscontact: admin.lab.local
