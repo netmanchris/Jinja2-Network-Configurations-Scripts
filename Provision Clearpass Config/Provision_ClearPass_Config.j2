@@ -4,19 +4,22 @@
 
 #RADIUS Server config
 
-{% for radius_server in network_global['radius_server'] -%}
+{% for radius_server in network_global['radius_server']['servers'] -%}
 radius-server host {{ radius_server['server_ip'] }} key {{ radius_server['auth_key'] }}
 {% endfor %}
 
 #create RADIUS Server group
-{% for radius_server in network_global['radius_server'] -%}
-aaa server-group radius "CPPM" host {{ radius_server['server_ip'] }}
+{% for server in network_global['radius_server']['servers'] -%}
+aaa server-group radius "{{ network_global['radius_server']['server_group'] }}" host {{ server['server_ip'] }}
 {% endfor %}
 
-aaa accounting network start-stop radius server-group "CPPM"
-aaa authentication port-access eap-radius server-group "CPPM"
-aaa authentication web-based chap-radius server-group "CPPM"
-aaa authentication mac-based chap-radius server-group "CPPM"
+
+aaa accounting network start-stop radius server-group "{{ network_global['radius_server']['server_group'] }}"
+aaa authentication port-access eap-radius server-group "{{ network_global['radius_server']['server_group'] }}"
+aaa authentication web-based chap-radius server-group "{{ network_global['radius_server']['server_group'] }}"
+aaa authentication mac-based chap-radius server-group "{{ network_global['radius_server']['server_group'] }}"
+
+
 
 #Enables RADIUS CoA on Provision Switches
 {% for radius_server in network_global['radius_server'] -%}
@@ -56,6 +59,49 @@ dhcp-snooping vlan {%  for vlan in network_global['dhcp_snooping_vlans']['vlans'
 interface {{ port['interface'] }}
  dhcp snooping trust
 {%  endfor %}
+
+{#
+creating L3 interfaces on device if desired
+#}
+
+{% if network_global['L3_Interfaces'] -%}
+{%  for vlan in network_global['L3_Interfaces'] -%}
+vlan {{ vlan['vlan'] }}
+    ip address {{ vlan['ip_address'] }} {{ vlan['mask'] }}
+    {%  for helper in network_global['ip_helpers'] -%}
+    ip helper-address {{ helper }}
+    {%  endfor %}
+{%  endfor %}
+{%  endif %}
+
+
+{#  this section will configured the switch for dot1x if appropriate #}
+{# configured the switch for EARP for 802.1x #}
+aaa authentication port-access eap-radius
+{# enables 802.1x globally #}
+aaa port-access authenticator active
+{#  enable authenticator process for 802.1x at the port level#}
+{%  if network_global['dot1x_Interfaces'] -%}
+{%  for interface in network_global['dot1x_Interfaces'] %}
+aaa port-access authenticator {{ interface['interface'] }} client limit 1
+{%  if network_global['unauth']  -%}
+aaa port-access authenticator {{ interface['interface'] }} unauth-vid {{ network_global['unauth']['vid'] }}
+aaa port-access authenticator {{ interface['interface'] }} unauth-period {{ network_global['unauth']['period'] }}
+{%  endif %}
+{%  endfor %}
+{% endif %}
+
+{%  if network_global['macauth_interfaces'] -%}
+{%  for interface in network_global['macauth_interfaces']['interfaces'] %}
+aaa port-access mac-based {{ interface['interface'] }}
+{%  if network_global['macauth_interfaces']['quiet-period']  -%}
+aaa port-access mac-based {{ interface['interface'] }} quiet-period {{ network_global['macauth_interfaces']['quiet-period'] }}{% endif %}
+{% if network_global['macauth_interfaces']['auth-vid']  -%}
+aaa port-access mac-based {{ interface['interface'] }} auth-vid {{ network_global['macauth_interfaces']['auth-vid'] }}
+{%  endif %}
+{%  endfor %}
+{% endif %}
+
 
 
 
