@@ -7,10 +7,28 @@
 {% for radius_server in network_global['radius_server'] -%}
 radius-server host {{ radius_server['server_ip'] }} key {{ radius_server['auth_key'] }}
 {% endfor %}
-#
+
+#create RADIUS Server group
+{% for radius_server in network_global['radius_server'] -%}
+aaa server-group radius "CPPM" host {{ radius_server['server_ip'] }}
+{% endfor %}
+
+aaa accounting network start-stop radius server-group "CPPM"
+aaa authentication port-access eap-radius server-group "CPPM"
+aaa authentication web-based chap-radius server-group "CPPM"
+aaa authentication mac-based chap-radius server-group "CPPM"
+
+#Enables RADIUS CoA on Provision Switches
 {% for radius_server in network_global['radius_server'] -%}
 radius-server host {{ radius_server['server_ip'] }} dyn-authorization
 {% endfor %}
+
+#enables the switch to accept CoA 'any-time'
+{% for radius_server in network_global['radius_server'] -%}
+radius-server host {{ radius_server['server_ip'] }} time-window 0
+{% endfor %}
+
+
 #
 aaa accounting network start-stop radius server-group radius
 #
