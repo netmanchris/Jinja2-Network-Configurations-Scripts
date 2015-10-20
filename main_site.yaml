@@ -1,0 +1,3 @@
+snmp:
+    syscontact: bob.suhay@hpe.com
+    syslocation: main_site

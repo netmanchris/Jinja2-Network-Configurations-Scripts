@@ -1,0 +1,43 @@
+#This template was generated using the document ClearPass_and_Provision_Technote_V1.pdf as the model
+
+
+
+#RADIUS Server config
+
+{% for radius_server in network_global['radius_server'] -%}
+radius-server host {{ radius_server['server_ip'] }} key {{ radius_server['auth_key'] }}
+{% endfor %}
+#
+{% for radius_server in network_global['radius_server'] -%}
+radius-server host {{ radius_server['server_ip'] }} dyn-authorization
+{% endfor %}
+#
+aaa accounting network start-stop radius server-group radius
+#
+aaa accounting
+#
+aaa accounting update periodic 2
+
+#DHCP Snooping Configuration
+
+dhcp-snooping
+#
+
+{%  for server in network_global['dhcp_server'] -%}
+dhcp-snooping authorized-server {{ server['server_ip'] }}
+{%  endfor %}
+
+#Adds Option 82 relay information option to DHCP request packets received on untrusted ports by default
+no dhcp-snooping option 82
+
+#
+dhcp-snooping vlan {%  for vlan in network_global['dhcp_snooping_vlans']['vlans'] -%} {{ vlan }} {%  endfor %}
+
+#configure DHCP-Snooping Trusted Ports
+{%  for port in network_global['trust_port_list'] -%}
+interface {{ port['interface'] }}
+ dhcp snooping trust
+{%  endfor %}
+
+
+

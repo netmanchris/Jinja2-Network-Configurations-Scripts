@@ -1,0 +1,51 @@
+
+
+
+hostname {{ device_values['hostname'] }}
+
+
+!
+aaa authentication login default group radius local
+
+ip name-server {{ network_global['dns']['server'] }}
+
+interface FastEthernet0/0
+ description {{ device_values['interface']['description'] }}
+ ip address {{ device_values['interface']['ip'] }} {{ device_values['interface']['mask'] }}
+ no ip proxy-arp
+ ip nbar protocol-discovery
+ ip flow ingress
+ ip flow egress
+ ip pim dense-mode
+ duplex full
+ speed auto
+ no mop enabled
+
+!
+
+ip default-gateway 10.101.254.1
+
+!
+
+{% for syslog in network_global['syslog'] -%}
+logging {{ syslog['loghost'] }}
+{% endfor %}
+
+!
+snmp-server community {{ network_global['snmp']['read'] }} RO
+snmp-server community {{ network_global['snmp']['write'] }} RW
+snmp-server ifindex persist
+snmp-server location {{ site['snmp']['syslocation'] }}
+snmp-server contact {{ site['snmp']['syscontact'] }}
+
+{% for trap in network_global['snmp']['trap'] -%}
+snmp-server host {{ trap['target'] }}  public
+{% endfor %}
+
+
+radius server IMC
+ address ipv4 {{ network_global['radius']['auth server'] }} auth-port 1812 acct-port 1813
+ key {{ network_global['radius']['secret'] }}
+
+
+`

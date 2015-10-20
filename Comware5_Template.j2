@@ -1,0 +1,74 @@
+#sysname config
+sysname {{ device_values['sysname'] }}
+
+#DHCP Relay config
+{% for dhcp_server in network_global['dhcp relay'] -%}
+dhcp relay server-group {{ dhcp_server['id'] }} ip {{ dhcp_server['ip'] }}    
+{% endfor %}
+
+#domain configuration
+domain default enable {{ network_global['domain']['name'] }}
+
+#enables CDP compliance
+lldp compliance cdp
+
+#sets mac-auth domain
+mac-authentication domain {{ network_global['domain']['name'] }}
+
+#vlan config
+{% for vlan in network_global['vlans'] -%}
+vlan {{ vlan['id'] }}
+    name {{ vlan['name'] }}
+    description {{ vlan['description'] }}
+{% endfor %}
+
+#radius config
+radius scheme {{ network_global['radius']['name'] }}
+ server-type extended
+ primary authentication {{ network_global['radius']['auth server'] }}
+ primary accounting {{ network_global['radius']['acct server'] }}
+ key authentication cipher {{ network_global['radius']['secret'] }}
+ key accounting cipher {{ network_global['radius']['secret'] }}
+ user-name-format without-domain
+ nas-ip {{ device_values['mgmt ip'] }}
+ radius scheme {{ network_global['domain']['name'] }}
+
+#domain config
+domain {{ network_global['domain']['name'] }}
+ authentication default radius-scheme {{ network_global['radius']['name'] }}
+ authorization default radius-scheme {{ network_global['radius']['name'] }}
+ accounting default radius-scheme {{ network_global['radius']['name'] }}
+ authentication login radius-scheme {{ network_global['radius']['name'] }}
+ authorization login radius-scheme {{ network_global['radius']['name'] }}
+ accounting login radius-scheme {{ network_global['radius']['name'] }}
+ authentication lan-access radius-scheme {{ network_global['radius']['name'] }}
+ authorization lan-access radius-scheme {{ network_global['radius']['name'] }}
+ authentication portal radius-scheme {{ network_global['radius']['name'] }}
+ authorization portal radius-scheme {{ network_global['radius']['name'] }}
+ accounting portal radius-scheme {{ network_global['radius']['name'] }}
+ access-limit disable 
+ state active 
+ idle-cut disable 
+ self-service-url disable 
+ accounting optional
+
+#dhcp_server_config
+                 #DHCP Server config
+{% for server in network_global['dhcp_server'] -%}
+dhcp server ip-pool {{ server['name'] }}
+    network {{ server['network'] }} mask {{ server['mask'] }}
+    gateway-list {{ server['gateway'] }}
+    dns-list {{ server['dns'] }}
+    domain-name {{ server['domain'] }}
+{% endfor %}
+
+#snmp_config
+snmp-agent
+
+snmp-agent community read {{ network_global['snmp']['read'] }}
+snmp-agent community write {{ network_global['snmp']['write'] }}
+snmp-agent sys-info contact {{ site['snmp']['syscontact']  }}
+snmp-agent sys-info location {{ site['snmp']['syslocation'] }}
+snmp-agent sys-info version all
+
+                 

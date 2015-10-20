@@ -1,0 +1,47 @@
+
+service timestamps debug datetime msec\
+service timestamps log datetime msec\
+no service password-encryption\
+service sequence-numbers\
+
+hostname {{ device_values['sysname'] }}
+
+
+!
+aaa authentication login default group radius local
+
+ip name-server {{ network_global['dns']['server'] }}
+
+interface FastEthernet0/0\
+ description HP830_LSW - Cisco2811.haw.int\
+ ip address 10.101.0.1 255.255.255.0\
+ no ip proxy-arp\
+ ip nbar protocol-discovery\
+ ip flow ingress\
+ ip flow egress\
+ ip pim dense-mode\
+ duplex full\
+ speed auto\
+ no mop enabled\
+
+ip default-gateway 10.101.254.1\
+
+ip route 0.0.0.0 0.0.0.0 10.101.254.1\
+logging 10.101.0.190\
+logging 10.101.0.205\
+logging 10.101.0.200\
+logging 10.10.12.13\
+logging 10.101.0.202\
+logging 10.3.10.235\
+!\
+snmp-server community public RO\
+snmp-server community private RW\
+snmp-server ifindex persist\
+snmp-server location changed this too\
+snmp-server contact changed this too\
+snmp-server host 10.10.12.13 public \
+
+
+radius server IMC
+ address ipv4 {{ network_global['radius']['auth server'] }}5 auth-port 1812 acct-port 1813
+ key {{ network_global['radius']['secret'] }}

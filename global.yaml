@@ -4,9 +4,8 @@ ntpServer:
 - {server: 10.101.0.1}
 - {server: 10.101.0.2}
 radius: {acct server: 10.101.0.220, auth server: 10.101.0.220, name: IMC_UAM, secret: testsecret}
-motd: #Welcome to HP internal test network. \n\nThis is a secure lab network, do not connect to any production systems. \n\nUnauthorized access is prohibited.\n\n#
 snmp:
-    read: public
+    read: robh
     syscontact: admin.lab.local
     syslocation: lab
     trap:
@@ -18,7 +17,12 @@ syslog:
 - {loghost: 10.101.0.200}
 - {loghost: 10.101.0.201}
 - {loghost: 10.101.0.202}
+- {loghost: 10.101.0.203}
+
 vlans:
 - {description: management vlan, id: '10', name: management}
 - {description: users vlan, id: '15', name: users}
-- {description: phones vlan, name: phones}
+- {description: phones vlan, id: '16', name: phones}
+- {description: servers vlan, id: '20', name: servers vlan }
+dns:
+-  {server: 10.101.254.1}
