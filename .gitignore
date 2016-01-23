@@ -1,1 +1,10 @@
 HP_CLI_Ref_Guide_ver3_final.pdf
+
+/.idea
+
+*.pyc
+
+/Archived
+
+/L3 Fabric Configs
+
