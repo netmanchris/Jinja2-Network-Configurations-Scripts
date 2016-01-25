@@ -1,0 +1,5 @@
+#vlan config
+{% for vlan in simple['vlans'] -%}
+vlan {{ vlan['id'] }}
+    name {{ vlan['name'] }}
+    description {{ vlan['description'] }}
