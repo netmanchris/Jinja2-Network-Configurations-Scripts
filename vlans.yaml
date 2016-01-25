@@ -1,0 +1,39 @@
+vlans:
+- {vlanId: '1', vlanName: default, vlanStatus: '1'}
+- {vlanId: '2', vlanName: TenantABC, vlanStatus: '1'}
+- {vlanId: '3', vlanName: management, vlanStatus: '1'}
+- {vlanId: '10', vlanName: mgmt, vlanStatus: '1'}
+- {vlanId: '11', vlanName: remotebranch, vlanStatus: '1'}
+- {vlanId: '12', vlanName: competitive, vlanStatus: '1'}
+- {vlanId: '13', vlanName: VLAN 0013, vlanStatus: '1'}
+- {vlanId: '15', vlanName: users, vlanStatus: '1'}
+- {vlanId: '16', vlanName: phones, vlanStatus: '1'}
+- {vlanId: '20', vlanName: servers, vlanStatus: '1'}
+- {vlanId: '50', vlanName: VLAN 0050, vlanStatus: '1'}
+- {vlanId: '101', vlanName: onboarding, vlanStatus: '1'}
+- {vlanId: '102', vlanName: guest, vlanStatus: '1'}
+- {vlanId: '103', vlanName: guestmobile, vlanStatus: '1'}
+- {vlanId: '105', vlanName: scep, vlanStatus: '1'}
+- {vlanId: '106', vlanName: scepreg, vlanStatus: '1'}
+- {vlanId: '110', vlanName: NewVLAN, vlanStatus: '1'}
+- {vlanId: '201', vlanName: VLAN 0201, vlanStatus: '1'}
+- {vlanId: '203', vlanName: VLAN 0203, vlanStatus: '1'}
+- {vlanId: '500', vlanName: VLAN500, vlanStatus: '1'}
+- {vlanId: '1010', vlanName: FBRAMGMT, vlanStatus: '1'}
+- {vlanId: '1011', vlanName: fbraservers, vlanStatus: '1'}
+- {vlanId: '1012', vlanName: FBRAemployee, vlanStatus: '1'}
+- {vlanId: '1013', vlanName: FBRAguest, vlanStatus: '1'}
+- {vlanId: '1014', vlanName: FBRAregistration, vlanStatus: '1'}
+- {vlanId: '1015', vlanName: FBRAvoice, vlanStatus: '1'}
+- {vlanId: '2000', vlanName: vsr240, vlanStatus: '1'}
+- {vlanId: '2001', vlanName: vsr241-1, vlanStatus: '1'}
+- {vlanId: '2002', vlanName: vsr-241-2, vlanStatus: '1'}
+- {vlanId: '2003', vlanName: vsr-242-1, vlanStatus: '1'}
+- {vlanId: '2004', vlanName: vsr-242-2, vlanStatus: '1'}
+- {vlanId: '2005', vlanName: VLAN 2005, vlanStatus: '1'}
+- {vlanId: '2006', vlanName: VLAN 2006, vlanStatus: '1'}
+- {vlanId: '2007', vlanName: VLAN 2007, vlanStatus: '1'}
+- {vlanId: '2008', vlanName: VLAN 2008, vlanStatus: '1'}
+- {vlanId: '2009', vlanName: VLAN 2009, vlanStatus: '1'}
+- {vlanId: '2010', vlanName: VLAN 2010, vlanStatus: '1'}
+- {vlanId: '3010', vlanName: ProvisionBranchVLAN10, vlanStatus: '1'}
