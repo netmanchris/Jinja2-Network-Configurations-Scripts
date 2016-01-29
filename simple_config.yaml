@@ -7,7 +7,7 @@ ip: 10.101.0.221
 
 snmp:
     read: supersecret
-    write: macdonald
+    write: private
     syscontact: admin.lab.local
     syslocation: lab
     trap:

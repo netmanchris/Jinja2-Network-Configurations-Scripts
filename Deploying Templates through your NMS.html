@@ -1,64 +1,10 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="chrome=1" />
-
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-<title>GIT and Jinja - Like Peanut butter and Pickles! slides</title>
+<head><meta charset="utf-8" />
+<title>Deploying Templates through your NMS</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-<!-- General and theme style sheets -->
-<link rel="stylesheet" href="reveal.js/css/reveal.css">
-<link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
-
-<!-- If the query includes 'print-pdf', include the PDF print sheet -->
-<script>
-if( window.location.search.match( /print-pdf/gi ) ) {
-        var link = document.createElement( 'link' );
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = 'reveal.js/css/print/pdf.css';
-        document.getElementsByTagName( 'head' )[0].appendChild( link );
-}
-
-</script>
-
-<!--[if lt IE 9]>
-<script src="reveal.js/lib/js/html5shiv.js"></script>
-<![endif]-->
-
-<!-- Loading the mathjax macro -->
-<!-- Load mathjax -->
-    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
-    <!-- MathJax configuration -->
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
-            processEscapes: true,
-            processEnvironments: true
-        },
-        // Center justify equations in code and markdown cells. Elsewhere
-        // we use CSS to left justify single line equations in code cells.
-        displayAlign: 'center',
-        "HTML-CSS": {
-            styles: {'.MathJax_Display': {"margin": 0}},
-            linebreaks: { automatic: true }
-        }
-    });
-    </script>
-    <!-- End of mathjax configuration -->
-
-<!-- Get Font-awesome from cdn -->
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
 
 <style type="text/css">
     /*!
@@ -168,143 +114,136 @@ if( window.location.search.match( /print-pdf/gi ) ) {
 
 <style type="text/css">
 /* Overrides of notebook CSS for static HTML export */
-.reveal {
-  font-size: 160%;
-  overflow-y: scroll;
+body {
+  overflow: visible;
+  padding: 8px;
 }
-.reveal pre {
-  width: inherit;
-  padding: 0.4em;
-  margin: 0px;
-  font-family: monospace, sans-serif;
-  font-size: 80%;
-  box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+
+div#notebook {
+  overflow: visible;
+  border-top: none;
 }
-.reveal pre code {
-  padding: 0px;
-}
-.reveal section img {
-  border: 0px solid black;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0);
-}
-.reveal i {
-  font-style: normal;
-  font-family: FontAwesome;
-  font-size: 2em;
-}
-.reveal .slides {
-  text-align: left;
-}
-.reveal.fade {
-  opacity: 1;
-}
-.reveal .progress {
-  position: static;
-}
-div.input_area {
-  padding: 0.06em;
-}
-div.code_cell {
-  background-color: transparent;
-}
-div.prompt {
-  width: 11ex;
-  padding: 0.4em;
-  margin: 0px;
-  font-family: monospace, sans-serif;
-  font-size: 80%;
-  text-align: right;
-}
-div.output_area pre {
-  font-family: monospace, sans-serif;
-  font-size: 80%;
-}
-div.output_prompt {
-  /* 5px right shift to account for margin in parent container */
-  margin: 5px 5px 0 0;
-}
-div.text_cell.rendered .rendered_html {
-  /* The H1 height seems miscalculated, we are just hidding the scrollbar */
-  overflow-y: hidden;
-}
-a.anchor-link {
-  /* There is still an anchor, we are only hidding it */
-  display: none;
-}
-.rendered_html p {
-  text-align: inherit;
+
+@media print {
+  div.cell {
+    display: block;
+    page-break-inside: avoid;
+  } 
+  div.output_wrapper { 
+    display: block;
+    page-break-inside: avoid; 
+  }
+  div.output { 
+    display: block;
+    page-break-inside: avoid; 
+  }
 }
 </style>
 
 <!-- Custom stylesheet, it must be in the same directory as the html file -->
 <link rel="stylesheet" href="custom.css">
 
-</head>
-
+<!-- Loading mathjax macro -->
+<!-- Load mathjax -->
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
 <body>
-<div class="reveal">
-<div class="slides">
-<section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
+  <div tabindex="-1" id="notebook" class="border-box-sizing">
+    <div class="container" id="notebook-container">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Using-GITHub-to-build-our-Network-Configs">Using GITHub to build our Network Configs<a class="anchor-link" href="#Using-GITHub-to-build-our-Network-Configs">&#182;</a></h1><p>As I wrote in <a href="https://kontrolissues.wordpress.com/2015/12/04/2015-2015-recap-and-plans-for-the-year/">this post</a>, one of my goals for this year is to be able to compltely automate the build of my lab environment programatically.</p>
-<p>In the last couple of jinja posts, I wrote about the basics of Jinja2 tempaltes and how they can be applied to building network configurations.</p>
-<p>In this post, I'm going to take the next step and move those files from my local hard drive out to...</p>
-<blockquote><p>duh duh dahhhhhhhhhh</p>
-</blockquote>
-<p>The cloud.</p>
-<p><img src="http://tse1.mm.bing.net/th?&id=OIP.M3407dafc5125fa282800d982c7ea84afH0&w=300&h=200&c=0&pid=1.9&rs=0&p=0&r=0" alt="The cloud"></p>
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="o">%%</span><span class="k">html</span>
+&lt;style&gt;
+table {float:left}
+&lt;/style&gt;
+</pre></div>
 
 </div>
 </div>
-</div></section></section><section><section>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+
+<div class="output_html rendered_html output_subarea ">
+<style>
+table {float:left}
+</style>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Before-we-get-started...">Before we get started...<a class="anchor-link" href="#Before-we-get-started...">&#182;</a></h1><p>We're going to go over some basics on the tools we're using to make sure everyone's on the same page. cool?</p>
-<h3 id="What's-GIT?">What's GIT?<a class="anchor-link" href="#What's-GIT?">&#182;</a></h3><p>Git is a widely-used source code management system for software development. It is a distributed revision control system with an emphasis on speed, data integrity, and support for distributed, non-linear workflows. <a href="https://goo.gl/bAsYMZ">wikipedia</a></p>
-<h3 id="Huh?">Huh?<a class="anchor-link" href="#Huh?">&#182;</a></h3><p>GIT is a piece of software that allows you to track changes to files over time.</p>
-<h3 id="So-what's-GITHub?">So what's GITHub?<a class="anchor-link" href="#So-what's-GITHub?">&#182;</a></h3><p>"Where software is built
-Powerful collaboration, code review, and code management for
-open source and private projects. Public projects are always free. " <a href="https://github.com/">Github.com</a></p>
-<p>GITHub is like facebook for developers. It's a place where you can sync your local GIT repository to a central location, and then sync that central location to other local repositories.</p>
-<h3 id="What's-a-repository?">What's a repository?<a class="anchor-link" href="#What's-a-repository?">&#182;</a></h3><p>A repository is essentially a collection of files that make up a project. You could think of it like a folder or directory. That analogy is not exact as it's possible for a repository to have multiple sub-folders or directories, but it's close enough for our purposes.</p>
-<h3 id="Is-GIT-only-for-Code?">Is GIT only for Code?<a class="anchor-link" href="#Is-GIT-only-for-Code?">&#182;</a></h3><p>GIT was definitely designed for software developers to as a versioning control system while developing software, 
-but you can use it for tracking changes to things other than</p>
-<p>You could use it for anything text format that you want to track changes to over time. For example</p>
+<p><em>note: It's come to my attention that Wordpress is truncating some of my posts so that the right hand side is blocked by the side bar. My apologies for the this. I'll get it fixed ( or more likely move to GH pages ) as quickly as possible. Thanks for your patience</em></p>
+<p><em>@netmanchris</em></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Deploying-Code-to-Devices-Through-your-NMS">Deploying Code to Devices Through your NMS<a class="anchor-link" href="#Deploying-Code-to-Devices-Through-your-NMS">&#182;</a></h1><p>If you're luck enough to have an NMS as powerful as <a href="http://www.hpe.com/networking/imc">HPE IMC</a> then you already have a very capable system which has a ton of APIs that you probably didn't even know about.</p>
+<p>We've spent the last few posts ( <a href="https://kontrolissues.wordpress.com/2016/01/14/intro-to-jinja2/">here</a>, <a href="https://kontrolissues.wordpress.com/2016/01/19/more-jinja-working-with-yam-as-an-input/">here</a>, and <a href="https://kontrolissues.wordpress.com/2016/01/29/git-and-jinja-like-peanut-butter-and-pickles/]">here</a> running through creating some network configurations through the <a href="http://jinja.pocoo.org/docs/dev/">Jinja2 templating language</a>.</p>
+<p>There are at least a couple of immediate benefits to this approach:</p>
 <ul>
-<li>grocery lists</li>
-<li>contact list</li>
-<li>tracking your weight</li>
+<li>Consistency in the configuration between devices</li>
+<li>Accuracy in the commands going into your devices</li>
 </ul>
-<p>There are a lot of interesting uses for GIT, one of those that we're going to use today is looking at storing our Jinja2 templates on a public GIT repository and loading them directly into our python script as part of the code.</p>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Import-Required-Libraries">Import Required Libraries<a class="anchor-link" href="#Import-Required-Libraries">&#182;</a></h1><p>Unles you've already got them, you'll need to  <code> pip install jinj2 </code> and <code> pip install requests </code> these two libraries before loading them into your running environment.</p>
+<p>But the one large draw back is that you've <strong>still</strong> got to cut and paste that configuration into your device somehow, which is not the ideal scenario. We're trying to get away from touching our devices.</p>
+<p>In this post, we're going to look at taking the rendered configuration and pushing it directly to the desired device through HPE IMC's RESTful API, refered to as the eAPI in documentation.</p>
+<p>*Although there used to be a charge for this, HPE recently made some changes and the RESTful API is now included in both</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[74]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">import</span> <span class="nn">githubuser</span>
+<span class="kn">from</span> <span class="nn">pyhpeimc.auth</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhpeimc.plat.device</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhpeimc.plat.icc</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyhpeimc.plat.vlanm</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">jinja2</span> <span class="k">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span><span class="p">,</span> <span class="n">Template</span>
 </pre></div>
 
@@ -312,58 +251,248 @@ but you can use it for tracking changes to things other than</p>
 </div>
 </div>
 
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Loading-Templates-from-GITHub">Loading Templates from GITHub<a class="anchor-link" href="#Loading-Templates-from-GITHub">&#182;</a></h1><p>Like with most things in python, if it's useful enough, chances are there's probably someone else who already put a library together for that. In our case, we're going to use the python <a href="http://docs.python-requests.org/en/latest/">request library</a> to handle loading files directly from our <a href="https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts/">Github repository</a>.</p>
-
-</div>
-</div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The first thing we'll do is load the HPE comware switch template from that we used in <a href="https://kontrolissues.wordpress.com/2016/01/19/more-jinja-working-with-yam-as-an-input/">this post</a>.  If you wanted to take a look at this directly on github, it can be found <a href="https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts/blob/master/simple_comware.j2">here</a>.   All we have to do is to copy and paste the URL from our browser directly into the first input of the requests.get function.</p>
-<p><em>note: The requests function will return a whole object that has various attributes. the " .text " at the end of this tells the function to just give us the contents of the file, not of the other information, like the HTTP status_code. </em></p>
-<p>Simple, right?</p>
-
+<h1 id="Loading-the-templates-and-values-from-Git">Loading the templates and values from Git<a class="anchor-link" href="#Loading-the-templates-and-values-from-Git">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[75]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">comware_template</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts/blob/master/simple_comware.j2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">comware_template</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/netmanchris/Jinja2-Network-Configurations-Scripts/master/comware_vlan.j2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+<span class="n">gitauth</span> <span class="o">=</span> <span class="n">githubuser</span><span class="o">.</span><span class="n">gitcreds</span><span class="p">()</span> <span class="c">#you didn&#39;t think I was going to give you my password did you?</span>
+<span class="n">simple</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/netmanchris/Jinja2-Network-Configurations-Scripts/master/vlans.yaml&#39;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">gitauth</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="n">cw_template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">comware_template</span><span class="p">)</span>
 </pre></div>
 
 </div>
 </div>
 </div>
 
-</div></section></section><section><section>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Looking-at-the-output">Looking at the output<a class="anchor-link" href="#Looking-at-the-output">&#182;</a></h2><p>So now that we've loaded the contents of the simple_comware.j2 template directly from the Github site into the comware_template variable. Let's take a look to make sure that we have what we need.</p>
+<h1 id="Rendering-the-template">Rendering the template<a class="anchor-link" href="#Rendering-the-template">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">my_template</span> <span class="o">=</span> <span class="n">cw_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="n">simple</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">my_template</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>#vlan config
+vlan 1
+    name default
+    description default
+vlan 2
+    name TenantABC
+    description TenantABC
+vlan 3
+    name management
+    description management
+vlan 10
+    name mgmt
+    description mgmt
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Options,-Options,-Options...">Options, Options, Options...<a class="anchor-link" href="#Options,-Options,-Options...">&#182;</a></h1><p>We now have a decision to make. There are a couple of different APIs available to us to push VLANs to the device.</p>
+<p>For this example, we're going to use the executecmd API that allows us to send a series of commands to the device through the HPE IMC REST API.</p>
+<p><img src="./images/executecmd.png" alt="vlan api"></p>
+<p>As you can see from the REST documentation, you need to send a JSON object which is a list of the commands that you would type in from the command prompt of the switch.</p>
+<p>So there are a couple of things we need to prepare the rendered jinja template into a format that can be sent to the API.</p>
+<ol>
+<li><p>We need to add the command <span style="color:blue"> "system-view" </span> to the beginning of the command list.</p>
+<blockquote><p>system-view on HPE Comware devices is equivalent to the enable + conf t commands using hte IOS syntax you're probably used to</p>
+</blockquote>
+</li>
+<li><p>We need to split the giant string that rendering the jinja template gave us into a python list with one command per list item. Thankfully, we can use the python <span style="color:blue">split</span> method to help us through this. We can use the carriage return symbol to identify the end of each line. python identifies the carriage return by the <span style="color:blue">\n</span> characters which is what we're going to use as the input to the split method.</p>
+</li>
+<li><p>Add the two together.</p>
+</li>
+</ol>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[76]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span> <span class="p">(</span><span class="n">comware_template</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span class="n">cmd_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;system-view&#39;</span><span class="p">]</span>
+<span class="n">cmd_list</span> <span class="o">=</span> <span class="n">cmd_list</span> <span class="o">+</span> <span class="n">my_template</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">cmd_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[23]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&apos;system-view&apos;,
+ &apos;#vlan config&apos;,
+ &apos;vlan 1&apos;,
+ &apos;    name default&apos;,
+ &apos;    description default&apos;,
+ &apos;vlan 2&apos;,
+ &apos;    name TenantABC&apos;,
+ &apos;    description TenantABC&apos;,
+ &apos;vlan 3&apos;,
+ &apos;    name management&apos;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Sending-the-commands">Sending the commands<a class="anchor-link" href="#Sending-the-commands">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">auth</span> <span class="o">=</span> <span class="n">IMCAuth</span><span class="p">(</span><span class="s">&quot;http://&quot;</span><span class="p">,</span> <span class="s">&quot;10.101.0.203&quot;</span><span class="p">,</span> <span class="s">&quot;8080&quot;</span><span class="p">,</span> <span class="s">&quot;admin&quot;</span><span class="p">,</span> <span class="s">&quot;admin&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Getting-the-Device-ID">Getting the Device ID<a class="anchor-link" href="#Getting-the-Device-ID">&#182;</a></h1><p>The input for the run_dev_cmd is the device ID. This is an internal number that IMC uses to idenitfy that specific device. Thankfully, we've also got an RESTful function to get that based on the IP address of the device.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">devid</span> <span class="o">=</span> <span class="n">get_dev_details</span><span class="p">(</span><span class="s">&#39;10.20.10.10&#39;</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">creds</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">url</span><span class="p">)[</span><span class="s">&#39;id&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">run_dev_cmd</span><span class="p">(</span><span class="n">devid</span><span class="p">,</span> <span class="n">cmd_list</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">creds</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">url</span><span class="p">)[</span><span class="s">&#39;success&#39;</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt output_prompt">Out[26]:</div>
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&apos;true&apos;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Double-Checking-the-VLANs">Double Checking the VLANs<a class="anchor-link" href="#Double-Checking-the-VLANs">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span class="n">cmd_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;system-view&#39;</span><span class="p">,</span> <span class="s">&#39;display vlan&#39;</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">run_dev_cmd</span><span class="p">(</span><span class="n">devid</span><span class="p">,</span> <span class="n">cmd_list</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">creds</span><span class="p">,</span> <span class="n">auth</span><span class="o">.</span><span class="n">url</span><span class="p">)[</span><span class="s">&#39;content&#39;</span><span class="p">])</span>
 </pre></div>
 
 </div>
@@ -378,553 +507,7 @@ but you can use it for tracking changes to things other than</p>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
 
-
-
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot; class=&quot;&quot;&gt;
-  &lt;head prefix=&quot;og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# object: http://ogp.me/ns/object# article: http://ogp.me/ns/article# profile: http://ogp.me/ns/profile#&quot;&gt;
-    &lt;meta charset=&apos;utf-8&apos;&gt;
-    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-    &lt;meta http-equiv=&quot;Content-Language&quot; content=&quot;en&quot;&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=1020&quot;&gt;
-    
-    
-    &lt;title&gt;Jinja2-Network-Configurations-Scripts/simple_comware.j2 at master · netmanchris/Jinja2-Network-Configurations-Scripts · GitHub&lt;/title&gt;
-    &lt;link rel=&quot;search&quot; type=&quot;application/opensearchdescription+xml&quot; href=&quot;/opensearch.xml&quot; title=&quot;GitHub&quot;&gt;
-    &lt;link rel=&quot;fluid-icon&quot; href=&quot;https://github.com/fluidicon.png&quot; title=&quot;GitHub&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; href=&quot;/apple-touch-icon.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;57x57&quot; href=&quot;/apple-touch-icon-57x57.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;60x60&quot; href=&quot;/apple-touch-icon-60x60.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;72x72&quot; href=&quot;/apple-touch-icon-72x72.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;76x76&quot; href=&quot;/apple-touch-icon-76x76.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;114x114&quot; href=&quot;/apple-touch-icon-114x114.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;120x120&quot; href=&quot;/apple-touch-icon-120x120.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;144x144&quot; href=&quot;/apple-touch-icon-144x144.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;152x152&quot; href=&quot;/apple-touch-icon-152x152.png&quot;&gt;
-    &lt;link rel=&quot;apple-touch-icon&quot; sizes=&quot;180x180&quot; href=&quot;/apple-touch-icon-180x180.png&quot;&gt;
-    &lt;meta property=&quot;fb:app_id&quot; content=&quot;1401488693436528&quot;&gt;
-
-      &lt;meta content=&quot;@github&quot; name=&quot;twitter:site&quot; /&gt;&lt;meta content=&quot;summary&quot; name=&quot;twitter:card&quot; /&gt;&lt;meta content=&quot;netmanchris/Jinja2-Network-Configurations-Scripts&quot; name=&quot;twitter:title&quot; /&gt;&lt;meta content=&quot;Jinja2-Network-Configurations-Scripts - Network Configuration Scripts&quot; name=&quot;twitter:description&quot; /&gt;&lt;meta content=&quot;https://avatars1.githubusercontent.com/u/9815146?v=3&amp;amp;s=400&quot; name=&quot;twitter:image:src&quot; /&gt;
-      &lt;meta content=&quot;GitHub&quot; property=&quot;og:site_name&quot; /&gt;&lt;meta content=&quot;object&quot; property=&quot;og:type&quot; /&gt;&lt;meta content=&quot;https://avatars1.githubusercontent.com/u/9815146?v=3&amp;amp;s=400&quot; property=&quot;og:image&quot; /&gt;&lt;meta content=&quot;netmanchris/Jinja2-Network-Configurations-Scripts&quot; property=&quot;og:title&quot; /&gt;&lt;meta content=&quot;https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts&quot; property=&quot;og:url&quot; /&gt;&lt;meta content=&quot;Jinja2-Network-Configurations-Scripts - Network Configuration Scripts&quot; property=&quot;og:description&quot; /&gt;
-      &lt;meta name=&quot;browser-stats-url&quot; content=&quot;https://api.github.com/_private/browser/stats&quot;&gt;
-    &lt;meta name=&quot;browser-errors-url&quot; content=&quot;https://api.github.com/_private/browser/errors&quot;&gt;
-    &lt;link rel=&quot;assets&quot; href=&quot;https://assets-cdn.github.com/&quot;&gt;
-    
-    &lt;meta name=&quot;pjax-timeout&quot; content=&quot;1000&quot;&gt;
-    
-
-    &lt;meta name=&quot;msapplication-TileImage&quot; content=&quot;/windows-tile.png&quot;&gt;
-    &lt;meta name=&quot;msapplication-TileColor&quot; content=&quot;#ffffff&quot;&gt;
-    &lt;meta name=&quot;selected-link&quot; value=&quot;repo_source&quot; data-pjax-transient&gt;
-
-    &lt;meta name=&quot;google-site-verification&quot; content=&quot;KT5gs8h0wvaagLKAVWq8bbeNwnZZK1r1XQysX3xurLU&quot;&gt;
-    &lt;meta name=&quot;google-analytics&quot; content=&quot;UA-3769691-2&quot;&gt;
-
-&lt;meta content=&quot;collector.githubapp.com&quot; name=&quot;octolytics-host&quot; /&gt;&lt;meta content=&quot;github&quot; name=&quot;octolytics-app-id&quot; /&gt;&lt;meta content=&quot;60148A1A:0600:25A84BB:56A3D8E2&quot; name=&quot;octolytics-dimension-request_id&quot; /&gt;
-&lt;meta content=&quot;/&amp;lt;user-name&amp;gt;/&amp;lt;repo-name&amp;gt;/blob/show&quot; data-pjax-transient=&quot;true&quot; name=&quot;analytics-location&quot; /&gt;
-
-
-
-  &lt;meta class=&quot;js-ga-set&quot; name=&quot;dimension1&quot; content=&quot;Logged Out&quot;&gt;
-
-
-
-        &lt;meta name=&quot;hostname&quot; content=&quot;github.com&quot;&gt;
-    &lt;meta name=&quot;user-login&quot; content=&quot;&quot;&gt;
-
-        &lt;meta name=&quot;expected-hostname&quot; content=&quot;github.com&quot;&gt;
-
-      &lt;link rel=&quot;mask-icon&quot; href=&quot;https://assets-cdn.github.com/pinned-octocat.svg&quot; color=&quot;#4078c0&quot;&gt;
-      &lt;link rel=&quot;icon&quot; type=&quot;image/x-icon&quot; href=&quot;https://assets-cdn.github.com/favicon.ico&quot;&gt;
-
-    &lt;meta content=&quot;0eeeaba99e18a2a857407008b071f2f698c9b4bd&quot; name=&quot;form-nonce&quot; /&gt;
-
-    &lt;link crossorigin=&quot;anonymous&quot; href=&quot;https://assets-cdn.github.com/assets/github-fefb561e0a804c2a181aed0adbaa8ba5aa475e09b7692a3f737cb8bb50ef1c27.css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;
-    &lt;link crossorigin=&quot;anonymous&quot; href=&quot;https://assets-cdn.github.com/assets/github2-b2d8d1fd984ff1b181275aaa1276c82bb266b4f58f08f3075941d786d5b432ec.css&quot; media=&quot;all&quot; rel=&quot;stylesheet&quot; /&gt;
-    
-    
-
-
-    &lt;meta http-equiv=&quot;x-pjax-version&quot; content=&quot;f08e6513a91b7d33dce8dbaaa01f9efd&quot;&gt;
-
-      
-  &lt;meta name=&quot;description&quot; content=&quot;Jinja2-Network-Configurations-Scripts - Network Configuration Scripts&quot;&gt;
-  &lt;meta name=&quot;go-import&quot; content=&quot;github.com/netmanchris/Jinja2-Network-Configurations-Scripts git https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts.git&quot;&gt;
-
-  &lt;meta content=&quot;9815146&quot; name=&quot;octolytics-dimension-user_id&quot; /&gt;&lt;meta content=&quot;netmanchris&quot; name=&quot;octolytics-dimension-user_login&quot; /&gt;&lt;meta content=&quot;39023270&quot; name=&quot;octolytics-dimension-repository_id&quot; /&gt;&lt;meta content=&quot;netmanchris/Jinja2-Network-Configurations-Scripts&quot; name=&quot;octolytics-dimension-repository_nwo&quot; /&gt;&lt;meta content=&quot;true&quot; name=&quot;octolytics-dimension-repository_public&quot; /&gt;&lt;meta content=&quot;false&quot; name=&quot;octolytics-dimension-repository_is_fork&quot; /&gt;&lt;meta content=&quot;39023270&quot; name=&quot;octolytics-dimension-repository_network_root_id&quot; /&gt;&lt;meta content=&quot;netmanchris/Jinja2-Network-Configurations-Scripts&quot; name=&quot;octolytics-dimension-repository_network_root_nwo&quot; /&gt;
-  &lt;link href=&quot;https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts/commits/master.atom&quot; rel=&quot;alternate&quot; title=&quot;Recent Commits to Jinja2-Network-Configurations-Scripts:master&quot; type=&quot;application/atom+xml&quot;&gt;
-
-
-      &lt;link rel=&quot;canonical&quot; href=&quot;https://github.com/netmanchris/Jinja2-Network-Configurations-Scripts/blob/master/simple_comware.j2&quot; data-pjax-transient&gt;
-  &lt;/head&gt;
-
-
-  &lt;body class=&quot;logged_out   env-production  vis-public page-blob&quot;&gt;
-    &lt;a href=&quot;#start-of-content&quot; tabindex=&quot;1&quot; class=&quot;accessibility-aid js-skip-to-content&quot;&gt;Skip to content&lt;/a&gt;
-
-    
-    
-    
-
-
-
-      
-      &lt;div class=&quot;header header-logged-out&quot; role=&quot;banner&quot;&gt;
-  &lt;div class=&quot;container clearfix&quot;&gt;
-
-    &lt;a class=&quot;header-logo-wordmark&quot; href=&quot;https://github.com/&quot; data-ga-click=&quot;(Logged out) Header, go to homepage, icon:logo-wordmark&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;mega-octicon octicon-logo-github&quot;&gt;&lt;/span&gt;
-    &lt;/a&gt;
-
-    &lt;div class=&quot;header-actions&quot; role=&quot;navigation&quot;&gt;
-        &lt;a class=&quot;btn btn-primary&quot; href=&quot;/join?source=header&quot; data-ga-click=&quot;(Logged out) Header, clicked Sign up, text:sign-up&quot;&gt;Sign up&lt;/a&gt;
-      &lt;a class=&quot;btn&quot; href=&quot;/login?return_to=%2Fnetmanchris%2FJinja2-Network-Configurations-Scripts%2Fblob%2Fmaster%2Fsimple_comware.j2&quot; data-ga-click=&quot;(Logged out) Header, clicked Sign in, text:sign-in&quot;&gt;Sign in&lt;/a&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;site-search repo-scope js-site-search&quot; role=&quot;search&quot;&gt;
-      &lt;!-- &lt;/textarea&gt; --&gt;&lt;!-- &apos;&quot;&#96; --&gt;&lt;form accept-charset=&quot;UTF-8&quot; action=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/search&quot; class=&quot;js-site-search-form&quot; data-global-search-url=&quot;/search&quot; data-repo-search-url=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/search&quot; method=&quot;get&quot;&gt;&lt;div style=&quot;margin:0;padding:0;display:inline&quot;&gt;&lt;input name=&quot;utf8&quot; type=&quot;hidden&quot; value=&quot;&amp;#x2713;&quot; /&gt;&lt;/div&gt;
-  &lt;label class=&quot;js-chromeless-input-container form-control&quot;&gt;
-    &lt;div class=&quot;scope-badge&quot;&gt;This repository&lt;/div&gt;
-    &lt;input type=&quot;text&quot;
-      class=&quot;js-site-search-focus js-site-search-field is-clearable chromeless-input&quot;
-      data-hotkey=&quot;s&quot;
-      name=&quot;q&quot;
-      placeholder=&quot;Search&quot;
-      aria-label=&quot;Search this repository&quot;
-      data-global-scope-placeholder=&quot;Search GitHub&quot;
-      data-repo-scope-placeholder=&quot;Search&quot;
-      tabindex=&quot;1&quot;
-      autocapitalize=&quot;off&quot;&gt;
-  &lt;/label&gt;
-&lt;/form&gt;
-    &lt;/div&gt;
-
-      &lt;ul class=&quot;header-nav left&quot; role=&quot;navigation&quot;&gt;
-          &lt;li class=&quot;header-nav-item&quot;&gt;
-            &lt;a class=&quot;header-nav-link&quot; href=&quot;/explore&quot; data-ga-click=&quot;(Logged out) Header, go to explore, text:explore&quot;&gt;Explore&lt;/a&gt;
-          &lt;/li&gt;
-          &lt;li class=&quot;header-nav-item&quot;&gt;
-            &lt;a class=&quot;header-nav-link&quot; href=&quot;/features&quot; data-ga-click=&quot;(Logged out) Header, go to features, text:features&quot;&gt;Features&lt;/a&gt;
-          &lt;/li&gt;
-          &lt;li class=&quot;header-nav-item&quot;&gt;
-            &lt;a class=&quot;header-nav-link&quot; href=&quot;https://enterprise.github.com/&quot; data-ga-click=&quot;(Logged out) Header, go to enterprise, text:enterprise&quot;&gt;Enterprise&lt;/a&gt;
-          &lt;/li&gt;
-          &lt;li class=&quot;header-nav-item&quot;&gt;
-            &lt;a class=&quot;header-nav-link&quot; href=&quot;/pricing&quot; data-ga-click=&quot;(Logged out) Header, go to pricing, text:pricing&quot;&gt;Pricing&lt;/a&gt;
-          &lt;/li&gt;
-      &lt;/ul&gt;
-
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-
-    &lt;div id=&quot;start-of-content&quot; class=&quot;accessibility-aid&quot;&gt;&lt;/div&gt;
-
-      &lt;div id=&quot;js-flash-container&quot;&gt;
-&lt;/div&gt;
-
-
-    &lt;div role=&quot;main&quot; class=&quot;main-content&quot;&gt;
-        &lt;div itemscope itemtype=&quot;http://schema.org/WebPage&quot;&gt;
-    &lt;div id=&quot;js-repo-pjax-container&quot; class=&quot;context-loader-container js-repo-nav-next&quot; data-pjax-container&gt;
-      
-&lt;div class=&quot;pagehead repohead instapaper_ignore readability-menu experiment-repo-nav&quot;&gt;
-  &lt;div class=&quot;container repohead-details-container&quot;&gt;
-
-    
-
-&lt;ul class=&quot;pagehead-actions&quot;&gt;
-
-  &lt;li&gt;
-      &lt;a href=&quot;/login?return_to=%2Fnetmanchris%2FJinja2-Network-Configurations-Scripts&quot;
-    class=&quot;btn btn-sm btn-with-count tooltipped tooltipped-n&quot;
-    aria-label=&quot;You must be signed in to watch a repository&quot; rel=&quot;nofollow&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-eye&quot;&gt;&lt;/span&gt;
-    Watch
-  &lt;/a&gt;
-  &lt;a class=&quot;social-count&quot; href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/watchers&quot;&gt;
-    3
-  &lt;/a&gt;
-
-  &lt;/li&gt;
-
-  &lt;li&gt;
-      &lt;a href=&quot;/login?return_to=%2Fnetmanchris%2FJinja2-Network-Configurations-Scripts&quot;
-    class=&quot;btn btn-sm btn-with-count tooltipped tooltipped-n&quot;
-    aria-label=&quot;You must be signed in to star a repository&quot; rel=&quot;nofollow&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-star&quot;&gt;&lt;/span&gt;
-    Star
-  &lt;/a&gt;
-
-    &lt;a class=&quot;social-count js-social-count&quot; href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/stargazers&quot;&gt;
-      0
-    &lt;/a&gt;
-
-  &lt;/li&gt;
-
-  &lt;li&gt;
-      &lt;a href=&quot;/login?return_to=%2Fnetmanchris%2FJinja2-Network-Configurations-Scripts&quot;
-        class=&quot;btn btn-sm btn-with-count tooltipped tooltipped-n&quot;
-        aria-label=&quot;You must be signed in to fork a repository&quot; rel=&quot;nofollow&quot;&gt;
-        &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-repo-forked&quot;&gt;&lt;/span&gt;
-        Fork
-      &lt;/a&gt;
-
-    &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/network&quot; class=&quot;social-count&quot;&gt;
-      0
-    &lt;/a&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-    &lt;h1 itemscope itemtype=&quot;http://data-vocabulary.org/Breadcrumb&quot; class=&quot;entry-title public &quot;&gt;
-  &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-repo&quot;&gt;&lt;/span&gt;
-  &lt;span class=&quot;author&quot;&gt;&lt;a href=&quot;/netmanchris&quot; class=&quot;url fn&quot; itemprop=&quot;url&quot; rel=&quot;author&quot;&gt;&lt;span itemprop=&quot;title&quot;&gt;netmanchris&lt;/span&gt;&lt;/a&gt;&lt;/span&gt;&lt;!--
---&gt;&lt;span class=&quot;path-divider&quot;&gt;/&lt;/span&gt;&lt;!--
---&gt;&lt;strong&gt;&lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts&quot; data-pjax=&quot;#js-repo-pjax-container&quot;&gt;Jinja2-Network-Configurations-Scripts&lt;/a&gt;&lt;/strong&gt;
-
-  &lt;span class=&quot;page-context-loader&quot;&gt;
-    &lt;img alt=&quot;&quot; height=&quot;16&quot; src=&quot;https://assets-cdn.github.com/images/spinners/octocat-spinner-32.gif&quot; width=&quot;16&quot; /&gt;
-  &lt;/span&gt;
-
-&lt;/h1&gt;
-
-  &lt;/div&gt;
-  &lt;div class=&quot;container&quot;&gt;
-    
-&lt;nav class=&quot;reponav js-repo-nav js-sidenav-container-pjax js-octicon-loaders&quot;
-     role=&quot;navigation&quot;
-     data-pjax=&quot;#js-repo-pjax-container&quot;&gt;
-
-  &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts&quot; aria-label=&quot;Code&quot; aria-selected=&quot;true&quot; class=&quot;js-selected-navigation-item selected reponav-item&quot; data-hotkey=&quot;g c&quot; data-selected-links=&quot;repo_source repo_downloads repo_commits repo_releases repo_tags repo_branches /netmanchris/Jinja2-Network-Configurations-Scripts&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-code&quot;&gt;&lt;/span&gt;
-    Code
-&lt;/a&gt;
-    &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/issues&quot; class=&quot;js-selected-navigation-item reponav-item&quot; data-hotkey=&quot;g i&quot; data-selected-links=&quot;repo_issues repo_labels repo_milestones /netmanchris/Jinja2-Network-Configurations-Scripts/issues&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-issue-opened&quot;&gt;&lt;/span&gt;
-      Issues
-      &lt;span class=&quot;counter&quot;&gt;0&lt;/span&gt;
-&lt;/a&gt;
-  &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/pulls&quot; class=&quot;js-selected-navigation-item reponav-item&quot; data-hotkey=&quot;g p&quot; data-selected-links=&quot;repo_pulls /netmanchris/Jinja2-Network-Configurations-Scripts/pulls&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-git-pull-request&quot;&gt;&lt;/span&gt;
-    Pull requests
-    &lt;span class=&quot;counter&quot;&gt;0&lt;/span&gt;
-&lt;/a&gt;
-
-  &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/pulse&quot; class=&quot;js-selected-navigation-item reponav-item&quot; data-selected-links=&quot;pulse /netmanchris/Jinja2-Network-Configurations-Scripts/pulse&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-pulse&quot;&gt;&lt;/span&gt;
-    Pulse
-&lt;/a&gt;
-  &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/graphs&quot; class=&quot;js-selected-navigation-item reponav-item&quot; data-selected-links=&quot;repo_graphs repo_contributors /netmanchris/Jinja2-Network-Configurations-Scripts/graphs&quot;&gt;
-    &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-graph&quot;&gt;&lt;/span&gt;
-    Graphs
-&lt;/a&gt;
-
-&lt;/nav&gt;
-
-  &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;div class=&quot;container new-discussion-timeline experiment-repo-nav&quot;&gt;
-  &lt;div class=&quot;repository-content&quot;&gt;
-
-    
-
-&lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/blob/ff92fa74e6c72c633a4e93ed204a9a6bc56d11f6/simple_comware.j2&quot; class=&quot;hidden js-permalink-shortcut&quot; data-hotkey=&quot;y&quot;&gt;Permalink&lt;/a&gt;
-
-&lt;!-- blob contrib key: blob_contributors:v21:d75b7c9a36c8f97125dd1a803c96b7bb --&gt;
-
-&lt;div class=&quot;file-navigation js-zeroclipboard-container&quot;&gt;
-  
-&lt;div class=&quot;select-menu js-menu-container js-select-menu left&quot;&gt;
-  &lt;button class=&quot;btn btn-sm select-menu-button js-menu-target css-truncate&quot; data-hotkey=&quot;w&quot;
-    title=&quot;master&quot;
-    type=&quot;button&quot; aria-label=&quot;Switch branches or tags&quot; tabindex=&quot;0&quot; aria-haspopup=&quot;true&quot;&gt;
-    &lt;i&gt;Branch:&lt;/i&gt;
-    &lt;span class=&quot;js-select-button css-truncate-target&quot;&gt;master&lt;/span&gt;
-  &lt;/button&gt;
-
-  &lt;div class=&quot;select-menu-modal-holder js-menu-content js-navigation-container&quot; data-pjax aria-hidden=&quot;true&quot;&gt;
-
-    &lt;div class=&quot;select-menu-modal&quot;&gt;
-      &lt;div class=&quot;select-menu-header&quot;&gt;
-        &lt;span aria-label=&quot;Close&quot; class=&quot;octicon octicon-x js-menu-close&quot; role=&quot;button&quot;&gt;&lt;/span&gt;
-        &lt;span class=&quot;select-menu-title&quot;&gt;Switch branches/tags&lt;/span&gt;
-      &lt;/div&gt;
-
-      &lt;div class=&quot;select-menu-filters&quot;&gt;
-        &lt;div class=&quot;select-menu-text-filter&quot;&gt;
-          &lt;input type=&quot;text&quot; aria-label=&quot;Filter branches/tags&quot; id=&quot;context-commitish-filter-field&quot; class=&quot;js-filterable-field js-navigation-enable&quot; placeholder=&quot;Filter branches/tags&quot;&gt;
-        &lt;/div&gt;
-        &lt;div class=&quot;select-menu-tabs&quot;&gt;
-          &lt;ul&gt;
-            &lt;li class=&quot;select-menu-tab&quot;&gt;
-              &lt;a href=&quot;#&quot; data-tab-filter=&quot;branches&quot; data-filter-placeholder=&quot;Filter branches/tags&quot; class=&quot;js-select-menu-tab&quot; role=&quot;tab&quot;&gt;Branches&lt;/a&gt;
-            &lt;/li&gt;
-            &lt;li class=&quot;select-menu-tab&quot;&gt;
-              &lt;a href=&quot;#&quot; data-tab-filter=&quot;tags&quot; data-filter-placeholder=&quot;Find a tag…&quot; class=&quot;js-select-menu-tab&quot; role=&quot;tab&quot;&gt;Tags&lt;/a&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-
-      &lt;div class=&quot;select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket&quot; data-tab-filter=&quot;branches&quot; role=&quot;menu&quot;&gt;
-
-        &lt;div data-filterable-for=&quot;context-commitish-filter-field&quot; data-filterable-type=&quot;substring&quot;&gt;
-
-
-            &lt;a class=&quot;select-menu-item js-navigation-item js-navigation-open selected&quot;
-               href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/blob/master/simple_comware.j2&quot;
-               data-name=&quot;master&quot;
-               data-skip-pjax=&quot;true&quot;
-               rel=&quot;nofollow&quot;&gt;
-              &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-check select-menu-item-icon&quot;&gt;&lt;/span&gt;
-              &lt;span class=&quot;select-menu-item-text css-truncate-target&quot; title=&quot;master&quot;&gt;
-                master
-              &lt;/span&gt;
-            &lt;/a&gt;
-        &lt;/div&gt;
-
-          &lt;div class=&quot;select-menu-no-results&quot;&gt;Nothing to show&lt;/div&gt;
-      &lt;/div&gt;
-
-      &lt;div class=&quot;select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket&quot; data-tab-filter=&quot;tags&quot;&gt;
-        &lt;div data-filterable-for=&quot;context-commitish-filter-field&quot; data-filterable-type=&quot;substring&quot;&gt;
-
-
-        &lt;/div&gt;
-
-        &lt;div class=&quot;select-menu-no-results&quot;&gt;Nothing to show&lt;/div&gt;
-      &lt;/div&gt;
-
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-  &lt;div class=&quot;btn-group right&quot;&gt;
-    &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/find/master&quot;
-          class=&quot;js-show-file-finder btn btn-sm&quot;
-          data-pjax
-          data-hotkey=&quot;t&quot;&gt;
-      Find file
-    &lt;/a&gt;
-    &lt;button aria-label=&quot;Copy file path to clipboard&quot; class=&quot;js-zeroclipboard btn btn-sm zeroclipboard-button tooltipped tooltipped-s&quot; data-copied-hint=&quot;Copied!&quot; type=&quot;button&quot;&gt;Copy path&lt;/button&gt;
-  &lt;/div&gt;
-  &lt;div class=&quot;breadcrumb js-zeroclipboard-target&quot;&gt;
-    &lt;span class=&quot;repo-root js-repo-root&quot;&gt;&lt;span itemscope=&quot;&quot; itemtype=&quot;http://data-vocabulary.org/Breadcrumb&quot;&gt;&lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts&quot; class=&quot;&quot; data-branch=&quot;master&quot; data-pjax=&quot;true&quot; itemscope=&quot;url&quot;&gt;&lt;span itemprop=&quot;title&quot;&gt;Jinja2-Network-Configurations-Scripts&lt;/span&gt;&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;separator&quot;&gt;/&lt;/span&gt;&lt;strong class=&quot;final-path&quot;&gt;simple_comware.j2&lt;/strong&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-  &lt;div class=&quot;commit-tease&quot;&gt;
-      &lt;span class=&quot;right&quot;&gt;
-        &lt;a class=&quot;commit-tease-sha&quot; href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/commit/ff92fa74e6c72c633a4e93ed204a9a6bc56d11f6&quot; data-pjax&gt;
-          ff92fa7
-        &lt;/a&gt;
-        &lt;time datetime=&quot;2016-01-23T17:55:36Z&quot; is=&quot;relative-time&quot;&gt;Jan 23, 2016&lt;/time&gt;
-      &lt;/span&gt;
-      &lt;div&gt;
-        &lt;img alt=&quot;@netmanchris&quot; class=&quot;avatar&quot; height=&quot;20&quot; src=&quot;https://avatars1.githubusercontent.com/u/9815146?v=3&amp;amp;s=40&quot; width=&quot;20&quot; /&gt;
-        &lt;a href=&quot;/netmanchris&quot; class=&quot;user-mention&quot; rel=&quot;author&quot;&gt;netmanchris&lt;/a&gt;
-          &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/commit/ff92fa74e6c72c633a4e93ed204a9a6bc56d11f6&quot; class=&quot;message&quot; data-pjax=&quot;true&quot; title=&quot;Fixing GIT&quot;&gt;Fixing GIT&lt;/a&gt;
-      &lt;/div&gt;
-
-    &lt;div class=&quot;commit-tease-contributors&quot;&gt;
-      &lt;a class=&quot;muted-link contributors-toggle&quot; href=&quot;#blob_contributors_box&quot; rel=&quot;facebox&quot;&gt;
-        &lt;strong&gt;1&lt;/strong&gt;
-         contributor
-      &lt;/a&gt;
-      
-    &lt;/div&gt;
-
-    &lt;div id=&quot;blob_contributors_box&quot; style=&quot;display:none&quot;&gt;
-      &lt;h2 class=&quot;facebox-header&quot; data-facebox-id=&quot;facebox-header&quot;&gt;Users who have contributed to this file&lt;/h2&gt;
-      &lt;ul class=&quot;facebox-user-list&quot; data-facebox-id=&quot;facebox-description&quot;&gt;
-          &lt;li class=&quot;facebox-user-list-item&quot;&gt;
-            &lt;img alt=&quot;@netmanchris&quot; height=&quot;24&quot; src=&quot;https://avatars3.githubusercontent.com/u/9815146?v=3&amp;amp;s=48&quot; width=&quot;24&quot; /&gt;
-            &lt;a href=&quot;/netmanchris&quot;&gt;netmanchris&lt;/a&gt;
-          &lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-&lt;div class=&quot;file&quot;&gt;
-  &lt;div class=&quot;file-header&quot;&gt;
-  &lt;div class=&quot;file-actions&quot;&gt;
-
-    &lt;div class=&quot;btn-group&quot;&gt;
-      &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/raw/master/simple_comware.j2&quot; class=&quot;btn btn-sm &quot; id=&quot;raw-url&quot;&gt;Raw&lt;/a&gt;
-        &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/blame/master/simple_comware.j2&quot; class=&quot;btn btn-sm js-update-url-with-hash&quot;&gt;Blame&lt;/a&gt;
-      &lt;a href=&quot;/netmanchris/Jinja2-Network-Configurations-Scripts/commits/master/simple_comware.j2&quot; class=&quot;btn btn-sm &quot; rel=&quot;nofollow&quot;&gt;History&lt;/a&gt;
-    &lt;/div&gt;
-
-
-        &lt;button type=&quot;button&quot; class=&quot;btn-octicon disabled tooltipped tooltipped-nw&quot;
-          aria-label=&quot;You must be signed in to make or propose changes&quot;&gt;
-          &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-pencil&quot;&gt;&lt;/span&gt;
-        &lt;/button&gt;
-        &lt;button type=&quot;button&quot; class=&quot;btn-octicon btn-octicon-danger disabled tooltipped tooltipped-nw&quot;
-          aria-label=&quot;You must be signed in to make or propose changes&quot;&gt;
-          &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-trashcan&quot;&gt;&lt;/span&gt;
-        &lt;/button&gt;
-  &lt;/div&gt;
-
-  &lt;div class=&quot;file-info&quot;&gt;
-      14 lines (14 sloc)
-      &lt;span class=&quot;file-info-divider&quot;&gt;&lt;/span&gt;
-    497 Bytes
-  &lt;/div&gt;
-&lt;/div&gt;
-
-  
-
-  &lt;div class=&quot;blob-wrapper data type-text&quot;&gt;
-      &lt;table class=&quot;highlight tab-size js-file-line-container&quot; data-tab-size=&quot;8&quot;&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L1&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;1&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC1&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;#sysname config&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L2&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;2&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC2&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;sysname {{ simple[&amp;#39;hostname&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L3&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;3&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC3&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;#vlan config&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L4&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;4&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC4&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;{% for vlan in simple[&amp;#39;vlans&amp;#39;] -%}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L5&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;5&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC5&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;vlan {{ vlan[&amp;#39;id&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L6&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;6&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC6&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;    name {{ vlan[&amp;#39;name&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L7&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;7&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC7&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;    description {{ vlan[&amp;#39;description&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L8&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;8&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC8&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;{% endfor %}#snmp_config&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L9&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;9&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC9&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L10&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;10&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC10&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent community read {{ simple[&amp;#39;snmp&amp;#39;][&amp;#39;read&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L11&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;11&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC11&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent community write {{ simple[&amp;#39;snmp&amp;#39;][&amp;#39;write&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L12&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;12&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC12&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent sys-info contact {{ simple[&amp;#39;snmp&amp;#39;][&amp;#39;syscontact&amp;#39;]  }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L13&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;13&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC13&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent sys-info location {{ simple[&amp;#39;snmp&amp;#39;][&amp;#39;syslocation&amp;#39;] }}&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;td id=&quot;L14&quot; class=&quot;blob-num js-line-number&quot; data-line-number=&quot;14&quot;&gt;&lt;/td&gt;
-        &lt;td id=&quot;LC14&quot; class=&quot;blob-code blob-code-inner js-file-line&quot;&gt;snmp-agent sys-info version all&lt;/td&gt;
-      &lt;/tr&gt;
-&lt;/table&gt;
-
-  &lt;/div&gt;
-
-&lt;/div&gt;
-
-&lt;a href=&quot;#jump-to-line&quot; rel=&quot;facebox[.linejump]&quot; data-hotkey=&quot;l&quot; style=&quot;display:none&quot;&gt;Jump to Line&lt;/a&gt;
-&lt;div id=&quot;jump-to-line&quot; style=&quot;display:none&quot;&gt;
-  &lt;!-- &lt;/textarea&gt; --&gt;&lt;!-- &apos;&quot;&#96; --&gt;&lt;form accept-charset=&quot;UTF-8&quot; action=&quot;&quot; class=&quot;js-jump-to-line-form&quot; method=&quot;get&quot;&gt;&lt;div style=&quot;margin:0;padding:0;display:inline&quot;&gt;&lt;input name=&quot;utf8&quot; type=&quot;hidden&quot; value=&quot;&amp;#x2713;&quot; /&gt;&lt;/div&gt;
-    &lt;input class=&quot;linejump-input js-jump-to-line-field&quot; type=&quot;text&quot; placeholder=&quot;Jump to line&amp;hellip;&quot; aria-label=&quot;Jump to line&quot; autofocus&gt;
-    &lt;button type=&quot;submit&quot; class=&quot;btn&quot;&gt;Go&lt;/button&gt;
-&lt;/form&gt;&lt;/div&gt;
-
-  &lt;/div&gt;
-  &lt;div class=&quot;modal-backdrop&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-    &lt;/div&gt;
-  &lt;/div&gt;
-
-    &lt;/div&gt;
-
-        &lt;div class=&quot;container&quot;&gt;
-  &lt;div class=&quot;site-footer&quot; role=&quot;contentinfo&quot;&gt;
-    &lt;ul class=&quot;site-footer-links right&quot;&gt;
-        &lt;li&gt;&lt;a href=&quot;https://status.github.com/&quot; data-ga-click=&quot;Footer, go to status, text:status&quot;&gt;Status&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://developer.github.com&quot; data-ga-click=&quot;Footer, go to api, text:api&quot;&gt;API&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://training.github.com&quot; data-ga-click=&quot;Footer, go to training, text:training&quot;&gt;Training&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://shop.github.com&quot; data-ga-click=&quot;Footer, go to shop, text:shop&quot;&gt;Shop&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/blog&quot; data-ga-click=&quot;Footer, go to blog, text:blog&quot;&gt;Blog&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/about&quot; data-ga-click=&quot;Footer, go to about, text:about&quot;&gt;About&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/pricing&quot; data-ga-click=&quot;Footer, go to pricing, text:pricing&quot;&gt;Pricing&lt;/a&gt;&lt;/li&gt;
-
-    &lt;/ul&gt;
-
-    &lt;a href=&quot;https://github.com&quot; aria-label=&quot;Homepage&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;mega-octicon octicon-mark-github&quot; title=&quot;GitHub &quot;&gt;&lt;/span&gt;
-&lt;/a&gt;
-    &lt;ul class=&quot;site-footer-links&quot;&gt;
-      &lt;li&gt;&amp;copy; 2016 &lt;span title=&quot;0.04239s from github-fe141-cp1-prd.iad.github.net&quot;&gt;GitHub&lt;/span&gt;, Inc.&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/site/terms&quot; data-ga-click=&quot;Footer, go to terms, text:terms&quot;&gt;Terms&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/site/privacy&quot; data-ga-click=&quot;Footer, go to privacy, text:privacy&quot;&gt;Privacy&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/security&quot; data-ga-click=&quot;Footer, go to security, text:security&quot;&gt;Security&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://github.com/contact&quot; data-ga-click=&quot;Footer, go to contact, text:contact&quot;&gt;Contact&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;https://help.github.com&quot; data-ga-click=&quot;Footer, go to help, text:help&quot;&gt;Help&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-
-
-    
-    
-    
-
-    &lt;div id=&quot;ajax-error-message&quot; class=&quot;flash flash-error&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-alert&quot;&gt;&lt;/span&gt;
-      &lt;button type=&quot;button&quot; class=&quot;flash-close js-flash-close js-ajax-error-dismiss&quot; aria-label=&quot;Dismiss error&quot;&gt;
-        &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-x&quot;&gt;&lt;/span&gt;
-      &lt;/button&gt;
-      Something went wrong with that request. Please try again.
-    &lt;/div&gt;
-
-
-      &lt;script crossorigin=&quot;anonymous&quot; src=&quot;https://assets-cdn.github.com/assets/compat-a0cee5d8d4fb535c0f41971d037b32e852a56ddca5bf67bb2124e426a2d813a5.js&quot;&gt;&lt;/script&gt;
-      &lt;script crossorigin=&quot;anonymous&quot; src=&quot;https://assets-cdn.github.com/assets/frameworks-9ee55ceaf87fc34dc86334249fef6cbece88e815478e0fbe81642d57ed0fff89.js&quot;&gt;&lt;/script&gt;
-      &lt;script async=&quot;async&quot; crossorigin=&quot;anonymous&quot; src=&quot;https://assets-cdn.github.com/assets/github-1be19ad6629c8d2b52bb1b011c6b7ecf743db569054c1c0f36c8d9858ce3f640.js&quot;&gt;&lt;/script&gt;
-      
-      
-      
-    &lt;div class=&quot;js-stale-session-flash stale-session-flash flash flash-warn flash-banner hidden&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-alert&quot;&gt;&lt;/span&gt;
-      &lt;span class=&quot;signed-in-tab-flash&quot;&gt;You signed in with another tab or window. &lt;a href=&quot;&quot;&gt;Reload&lt;/a&gt; to refresh your session.&lt;/span&gt;
-      &lt;span class=&quot;signed-out-tab-flash&quot;&gt;You signed out in another tab or window. &lt;a href=&quot;&quot;&gt;Reload&lt;/a&gt; to refresh your session.&lt;/span&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;facebox&quot; id=&quot;facebox&quot; style=&quot;display:none;&quot;&gt;
-  &lt;div class=&quot;facebox-popup&quot;&gt;
-    &lt;div class=&quot;facebox-content&quot; role=&quot;dialog&quot; aria-labelledby=&quot;facebox-header&quot; aria-describedby=&quot;facebox-description&quot;&gt;
-    &lt;/div&gt;
-    &lt;button type=&quot;button&quot; class=&quot;facebox-close js-facebox-close&quot; aria-label=&quot;Close modal&quot;&gt;
-      &lt;span aria-hidden=&quot;true&quot; class=&quot;octicon octicon-x&quot;&gt;&lt;/span&gt;
-    &lt;/button&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-
-  &lt;/body&gt;
-&lt;/html&gt;
-
-
+ 1(default), 2-3, 5, 10 
 </pre>
 </div>
 </div>
@@ -932,387 +515,30 @@ but you can use it for tracking changes to things other than</p>
 </div>
 </div>
 
-</div></section></section><section><section>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Hmmmmm.-That's-not-right?">Hmmmmm. That's not right?<a class="anchor-link" href="#Hmmmmm.-That's-not-right?">&#182;</a></h2><p>The requests library is reaching out and grabbing whatever we put into that first variable. If we look at the print contents, we can see the first line is <strong> &lt;!DOCTYPE html&gt; </strong>. So it looks like we're grabbing the rendered webpage, not just the contents of the file. Thankfully, looking at the GITHub website, there's an option to look at any of your files in <strong>raw</strong> mode.  So let's grab that URL and try this again, ok?</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[77]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">comware_template</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/netmanchris/Jinja2-Network-Configurations-Scripts/master/simple_comware.j2&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[78]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span> <span class="p">(</span><span class="n">comware_template</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>#sysname config
-sysname {{ simple[&apos;hostname&apos;] }}
-#vlan config
-{% for vlan in simple[&apos;vlans&apos;] -%}
-vlan {{ vlan[&apos;id&apos;] }}
-    name {{ vlan[&apos;name&apos;] }}
-    description {{ vlan[&apos;description&apos;] }}
-{% endfor %}#snmp_config
-snmp-agent
-snmp-agent community read {{ simple[&apos;snmp&apos;][&apos;read&apos;] }}
-snmp-agent community write {{ simple[&apos;snmp&apos;][&apos;write&apos;] }}
-snmp-agent sys-info contact {{ simple[&apos;snmp&apos;][&apos;syscontact&apos;]  }}
-snmp-agent sys-info location {{ simple[&apos;snmp&apos;][&apos;syslocation&apos;] }}
-snmp-agent sys-info version all
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<blockquote><h2 id="Ahhhh...-That's-better.">Ahhhh... That's better.<a class="anchor-link" href="#Ahhhh...-That's-better.">&#182;</a></h2>
+<h1 id="Getting-better,-right?">Getting better, right?<a class="anchor-link" href="#Getting-better,-right?">&#182;</a></h1><p>So we've come a long way in a short time. We've</p>
+<ul>
+<li>started with an introduction to <a href="https://kontrolissues.wordpress.com/2016/01/14/intro-to-jinja2/">Jinja2 templating language</a></li>
+<li>learned how to <a href="https://kontrolissues.wordpress.com/2016/01/19/more-jinja-working-with-yam-as-an-input/">access templates and input variables from our hard drive</a></li>
+<li><a href="https://kontrolissues.wordpress.com/2016/01/29/git-and-jinja-like-peanut-butter-and-pickles/">Moved our access tempaltes and input variables to GitHub so that we can work collabaratively with our team</a></li>
+</ul>
+<p>And in this post, we learned how to leverage the first three to deploy configurations directly from code to our devices. This is a big step forward, but there are still a couple of small problems that we need to address</p>
+<h2 id="Configuration-Drift">Configuration Drift<a class="anchor-link" href="#Configuration-Drift">&#182;</a></h2><p>If you look closely, we've actually got an extra VLAN in there. <strong>VLAN 5</strong> has been configured on the device, but it's not in our list of desired_vlans where we have declared exactly which VLANs should be on the target device. This is what is sometimes known as configuration drift. Some people may say</p>
+<blockquote><p>Hey, It's just an extra VLAN right? That won't hurt us!</p>
 </blockquote>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Loading-Network-Specific-Values-from-GITHub">Loading Network Specific Values from GITHub<a class="anchor-link" href="#Loading-Network-Specific-Values-from-GITHub">&#182;</a></h1><p>Now we're going to load our network specific values which were stored in the YAML file in <a href="https://kontrolissues.wordpress.com/2016/01/19/more-jinja-working-with-yam-as-an-input/">this post</a>.  But this time, we're going to load them directly from a private github repository.</p>
-<p>The free GITHub accounts allow you to have public repositories, which means everyone can see what you're doing, but if you have a <a href="https://github.com/pricing">paid version</a>, you can get private repositories for as little as five dollars a month.</p>
-<p>The private repositories are secured and can only be accessed by someone with a GIThub username and password who has explicitly been given access to this repository.</p>
-<p>I would say that it's probably a bad idea for us to keep any secure information like usernames, passwords, or SNMP strings in a online repository. But for my purposes, I don't have anythng of value in this lab environment so I'm not too worried about it.</p>
-<ul>
-<li>note: Before you put any sensitive data into an online repository of any kind, be sure to check with your data policies see if you're breaking any corporate rules. *</li>
-</ul>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Creating-an-Auth-Object">Creating an Auth Object<a class="anchor-link" href="#Creating-an-Auth-Object">&#182;</a></h2><p>First, I'm going to create an auth object, which is basically a single object that represents the username and password for my github account. In my case, I've got a file on my local hard drive that will automatically create the auth object for me.</p>
-<p>In case you're interested, the file is called <em>githubuser.py</em> and contains the following code.
-<code python>
-from requests.auth import HTTPBasicAuth</p>
-<p>def gitcreds():
-    auth = HTTPBasicAuth('netmanchris', 'my_secret_password')
-    return auth
-    &lt;/code&gt;</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">auth</span> <span class="o">=</span> <span class="n">githubuser</span><span class="o">.</span><span class="n">gitcreds</span><span class="p">()</span> <span class="c">#you didn&#39;t think I was going to give you my password did you?</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Loading-simple.yaml">Loading simple.yaml<a class="anchor-link" href="#Loading-simple.yaml">&#182;</a></h2><p>We'll now load the simple.yaml file like we did in <a href="https://kontrolissues.wordpress.com/2016/01/19/more-jinja-working-with-yam-as-an-input/">this post</a> but instead of opening it from a local file, we're going to load it directly from the raw version of the file on github. I'd give you the link but it's in a private repository, so you won't be able to access it anyways.</p>
-<p>Thigs I want to point out</p>
-<ul>
-<li>yaml.load:  takes the response and processes the yaml content directly into a python data structure ( dictionary )</li>
-<li>.text: takes the ".text" attribute from the requests object which is the content of the page. </li>
-<li>auth = auth:  takes the auth object we created above and passes it as the username and password during the HTTP request. </li>
-</ul>
-<p>Make sense?</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[80]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">simple</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;https://raw.githubusercontent.com/netmanchris/PrivateRepo/master/simple_config.yaml&#39;</span><span class="p">,</span> <span class="n">auth</span><span class="o">=</span><span class="n">auth</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[81]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">simple</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[81]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>{&apos;hostname&apos;: &apos;testswitch&apos;,
- &apos;ip&apos;: &apos;10.101.0.221&apos;,
- &apos;snmp&apos;: {&apos;read&apos;: &apos;supersecret&apos;,
-  &apos;syscontact&apos;: &apos;admin.lab.local&apos;,
-  &apos;syslocation&apos;: &apos;lab&apos;,
-  &apos;trap&apos;: [{&apos;target&apos;: &apos;10.101.0.200&apos;},
-   {&apos;target&apos;: &apos;10.101.0.201&apos;},
-   {&apos;target&apos;: &apos;10.101.0.202&apos;}],
-  &apos;write&apos;: &apos;macdonald&apos;},
- &apos;vlans&apos;: [{&apos;description&apos;: &apos;management vlan&apos;,
-   &apos;id&apos;: &apos;10&apos;,
-   &apos;name&apos;: &apos;management&apos;},
-  {&apos;description&apos;: &apos;users vlan&apos;, &apos;id&apos;: &apos;15&apos;, &apos;name&apos;: &apos;users&apos;},
-  {&apos;description&apos;: &apos;phones vlan&apos;, &apos;id&apos;: &apos;16&apos;, &apos;name&apos;: &apos;phones&apos;},
-  {&apos;description&apos;: &apos;servers vlan&apos;, &apos;id&apos;: &apos;20&apos;, &apos;name&apos;: &apos;servers vlan&apos;}]}</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Putting-it-all-together">Putting it all together<a class="anchor-link" href="#Putting-it-all-together">&#182;</a></h1><p>So looking at our list</p>
-<ul>
-<li>download simple_comware.j2 template from Github public repo:    <span style="color:green">**Check!**</span></li>
-<li>download simple.yaml values file from Github private repo: <span style="color:green">**Check!**</span></li>
-<li>rendered templates:                                            <span style="color:red">**Nope**</span></li>
-</ul>
-<p>So I guess we know what comes next, right?</p>
-
-</div>
-</div>
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Rendering-the-final-config">Rendering the final config<a class="anchor-link" href="#Rendering-the-final-config">&#182;</a></h1><p>We use the <strong>Template</strong> function to create a jinja2 template object and then we use the <strong>simple</strong> variable we created during the yaml section as input into the cw_template object.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[82]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="n">cw_template</span> <span class="o">=</span> <span class="n">Template</span><span class="p">(</span><span class="n">comware_template</span><span class="p">)</span>
-<span class="nb">type</span><span class="p">(</span><span class="n">cw_template</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt output_prompt">Out[82]:</div>
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>jinja2.environment.Template</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[83]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="nb">print</span> <span class="p">(</span><span class="n">cw_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="n">simple</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>#sysname config
-sysname testswitch
-#vlan config
-vlan 10
-    name management
-    description management vlan
-vlan 15
-    name users
-    description users vlan
-vlan 16
-    name phones
-    description phones vlan
-vlan 20
-    name servers vlan
-    description servers vlan
-#snmp_config
-snmp-agent
-snmp-agent community read supersecret
-snmp-agent community write macdonald
-snmp-agent sys-info contact admin.lab.local
-snmp-agent sys-info location lab
-snmp-agent sys-info version all
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Writing-the-Config-to-Disk">Writing the Config to Disk<a class="anchor-link" href="#Writing-the-Config-to-Disk">&#182;</a></h2><p>So far we've only been rendering and printing configurations, but it would be kinda nice to be able to have these on disk so that we can open them in our favorite editor before we cut and paste them into a telnet session to our network device.</p>
-<p>The next two commands simply write the rendered template to disk with the filename <strong>comware.cfg</strong> and then we open and print the file to screen just to make sure it worked.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[84]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;comware.cfg&#39;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cw_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">simple</span><span class="o">=</span><span class="n">simple</span><span class="p">))</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[85]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;comware.cfg&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>#sysname config
-sysname testswitch
-#vlan config
-vlan 10
-    name management
-    description management vlan
-vlan 15
-    name users
-    description users vlan
-vlan 16
-    name phones
-    description phones vlan
-vlan 20
-    name servers vlan
-    description servers vlan
-#snmp_config
-snmp-agent
-snmp-agent community read supersecret
-snmp-agent community write macdonald
-snmp-agent sys-info contact admin.lab.local
-snmp-agent sys-info location lab
-snmp-agent sys-info version all
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div></section></section><section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="What's-next?">What's next?<a class="anchor-link" href="#What's-next?">&#182;</a></h1><p>So far, we've come pretty far. We've written a couple of jinja templates, we've figure out how to store those files in a centralized control versioning system, but we're still cut'ing and past'ing those configurations ourselves which is not ideal.</p>
-<p>In the next post, we'll look at using APIs to push the configuraiton directly to a configuraiton management tool.</p>
-<p>Questions or comments?   Feel free to post below!</p>
+<p>Sorry to respectfully disagree, but this attitude is exactly what causes us issues. This is the death of a thousand cuts. It's <strong>JUST</strong> one VLAN, <strong>JUST</strong> one switch running a differnet version of code, <strong>JUST</strong> one router that has some unused sub-interfaces on it.</p>
+<p><strong>IT'S JUST ONE MORE THING THAT WILL BITE YOU WHEN YOU'RE TROUBLESHOOTING AN ISSUE.</strong></p>
+<p>These <strong>JUST</strong> things are what we sometimes call technical debt. If you can figure out out.</p>
+<h2 id="Vendor-Syntax">Vendor Syntax<a class="anchor-link" href="#Vendor-Syntax">&#182;</a></h2><p>The other problem with this example is that we are bound to a specific vendor's syntax. If you attmept to run the <strong>system-view</strong> command on a Juniper/Cisco/Brocade/Extreme/ARISTA device, it's going to error out. Right?  This coule easily be addressed by some conditional logic which figures out which kind of a box it is first and then leverages a specific Jinja template for that vendor, but you can see how this becomes a slippery slope rather quickly.</p>
+<p>In the next post, we're going to look at a way to address both of these issues.</p>
+<p>Stay Tuned!</p>
 <p>@netmanchris</p>
+<p>P.S. As always, comments and questions are more than welcome.</p>
 
 </div>
 </div>
@@ -1329,63 +555,8 @@ snmp-agent sys-info version all
 </div>
 </div>
 
-</div></section></section>
 </div>
-</div>
-
-<script>
-
-require(
-    {
-      // it makes sense to wait a little bit when you are loading
-      // reveal from a cdn in a slow connection environment
-      waitSeconds: 15
-    },
-    [
-      "reveal.js/lib/js/head.min.js",
-      "reveal.js/js/reveal.js"
-    ],
-
-    function(head, Reveal){
-
-        // Full list of configuration options available here: https://github.com/hakimel/reveal.js#configuration
-        Reveal.initialize({
-            controls: true,
-            progress: true,
-            history: true,
-
-            theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-            transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/none
-
-            // Optional libraries used to extend on reveal.js
-            dependencies: [
-                { src: "reveal.js/lib/js/classList.js",
-                  condition: function() { return !document.body.classList; } },
-                { src: "reveal.js/plugin/notes/notes.js",
-                  async: true,
-                  condition: function() { return !!document.body.classList; } }
-            ]
-        });
-
-        var update = function(event){
-          if(MathJax.Hub.getAllJax(Reveal.getCurrentSlide())){
-            MathJax.Hub.Rerender(Reveal.getCurrentSlide());
-          }
-        };
-
-        Reveal.addEventListener('slidechanged', update);
-
-        var update_scroll = function(event){
-          $(".reveal").scrollTop(0);
-        };
-
-        Reveal.addEventListener('slidechanged', update_scroll);
-
-    }
-);
-
-</script>
-
+    </div>
+  </div>
 </body>
-
 </html>
