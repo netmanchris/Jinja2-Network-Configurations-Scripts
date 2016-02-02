@@ -1,0 +1,29 @@
+#sysname config
+sysname {{ dev.sysname }}
+router id {{  dev.routerid }}
+#
+{%  for interface in dev.interfaces -%}
+interface {{  interface.ifdesc }}
+ ip address {{  interface.ipaddress }} {{  interface.mask }}{%  if interface.portmode %}
+ port link-mode {{ interface['portmode'] }}
+    {%  endif %}
+{% endfor %}
+#
+ospf {{ devglobals.ospf.process }}
+ area {{ devglobals.ospf.area }}
+  network {{  devglobals.ospf.network }} {{ devglobals.ospf.wildcard }}
+#
+ecmp mode {{  devglobals.ecmpmode }}
+#vlan config
+{% for vlan in devglobals['vlans'] -%}
+vlan {{ vlan['id'] }}
+    name {{ vlan['name'] }}
+    description {{ vlan['description'] }}
+{% endfor %}#snmp_config
+snmp-agent
+snmp-agent community read {{ devglobals['snmp']['read'] }}
+snmp-agent community write {{ devglobals['snmp']['write'] }}
+snmp-agent sys-info contact {{ devglobals['snmp']['syscontact']  }}
+snmp-agent sys-info location {{ devglobals['snmp']['syslocation'] }}
+snmp-agent sys-info version all
+
